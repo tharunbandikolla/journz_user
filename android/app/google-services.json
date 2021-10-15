@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "363234200077",
+    "project_id": "journzsocialnetwork",
+    "storage_bucket": "journzsocialnetwork.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363234200077:android:7769c8e302736053e4e344",
+        "android_client_info": {
+          "package_name": "in.journz.journz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363234200077-7rno3p5g5abjaaslcjfcfuv47d5ip8ee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.journz.journz",
+            "certificate_hash": "b26188787179b8330f51fa28ae9a945e3d04cf8d"
+          }
+        },
+        {
+          "client_id": "363234200077-j90q0cijjqeuecjfioqesjuu3984j9p6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.journz.journz",
+            "certificate_hash": "8af687fcbe7beb561351100c76d9c6da1f9eee4e"
+          }
+        },
+        {
+          "client_id": "363234200077-ot12sq043sc45415ngbrruho2n4fv4s7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWCGkOcGNaMeZtcAsQmnu8viLMd_BIU8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363234200077-ot12sq043sc45415ngbrruho2n4fv4s7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
