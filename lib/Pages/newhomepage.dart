@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:journz_web/Pages/detailspage.dart';
+//import 'package:journz_web/Pages/detailspage.dart';
 import 'package:journz_web/constants/footer.dart';
 import 'package:journz_web/constants/leftpane.dart';
 import 'package:journz_web/constants/rightpane.dart';
+import 'package:journz_web/utils/routes.dart';
 //import 'package:journz_web/components/sidemenu.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
@@ -16,8 +17,6 @@ import 'package:velocity_x/velocity_x.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
-  static const homescreen = "/";
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -42,55 +41,65 @@ class _HomePageState extends State<HomePage> {
     //String category = "";
 
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: Image.asset(
-            "assets/images/logo.png",
-            // height: 50,
-            // width: 50,
-          ),
-          title: Text("Journz",
-              style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w800)),
-          backgroundColor: Colors.blue[150],
-          actions: [
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: Colors.black, width: 2))),
-                    child: Text("Articles",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w300)),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(100),
+          child: AppBar(
+            leadingWidth: 70,
+            toolbarHeight: 80,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(150)),
+            elevation: 20,
+            shadowColor: Colors.black26,
+            leading: Image.asset(
+              "assets/images/logo.png",
+              height: 100,
+              width: 70,
+            ),
+            title: Text("Journz",
+                style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w800)),
+            //backgroundColor: Colors.blue[150],
+            backgroundColor: Colors.white,
+            actions: [
+              Row(
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              bottom:
+                                  BorderSide(color: Colors.black, width: 2))),
+                      child: Text("Articles",
+                          style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w300)),
+                    ),
                   ),
-                ),
-                15.widthBox,
-                InkWell(
-                  onTap: () {
-                    //showInfodialog(context);
-                    showConfirm("Section Coming soon");
-                  },
-                  child: Container(
-                    child: Text("News",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w300)),
-                  ),
-                )
-              ],
-            ).pOnly(right: 200),
-          ],
+                  15.widthBox,
+                  InkWell(
+                    onTap: () {
+                      //showInfodialog(context);
+                      showConfirm("Section Coming soon");
+                    },
+                    child: Container(
+                      child: Text("News",
+                          style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w300)),
+                    ),
+                  )
+                ],
+              ).pOnly(right: 200),
+            ],
+          ).p20(),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -104,14 +113,15 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                       //alignment: Alignment.center,
                       height: context.screenHeight,
-                      width: context.percentWidth * 70,
-                      //color: Colors.grey[200],
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(20),
-                              topLeft: Radius.circular(20))),
+                      width: context.percentWidth * 65,
+                      //color: Colors.white,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(7),
+                              topLeft: Radius.circular(7))),
                       child: SingleChildScrollView(
+                        //physics: const NeverScrollableScrollPhysics(),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -126,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                   const RightPane(),
                 ],
               ),
-              10.heightBox,
+              5.heightBox,
               const Footer()
             ],
           ),
@@ -234,11 +244,13 @@ class Articles extends StatelessWidget {
       stream: _item == null || _item['SubType'] == 'All'
           ? FirebaseFirestore.instance
               .collection('ArticlesCollection')
+              .where('IsArticlePublished', isEqualTo: 'Published')
               //.orderBy('Index')
               .snapshots()
           : FirebaseFirestore.instance
               .collection('ArticlesCollection')
               .where('ArticleSubType', isEqualTo: _item['SubType'])
+              .where('IsArticlePublished', isEqualTo: 'Published')
               //.orderBy('Index')
               .snapshots(),
       builder: (context, snapshot) {
@@ -250,194 +262,212 @@ class Articles extends StatelessWidget {
             child: "Amazing Articles on your way".text.xl.bold.make(),
           );
         }
-        return SizedBox(
-          height: 550,
-          child: StaggeredGridView.countBuilder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            //physics: const AlwaysScrollableScrollPhysics(),
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            crossAxisCount: 9,
-            itemCount: snapshot.data!.docs.length,
-            staggeredTileBuilder: (index) {
-              DocumentSnapshot ds = snapshot.data!.docs[index];
-              return StaggeredTile.count(
-                  3, ds['ArticlePhotoUrl'] == 'WithoutImage' ? 1.5 : 3);
-            },
-            // staggeredTileBuilder: (index) =>
-            //     StaggeredTile.count(3, index.isEven ? 2 : 1),
-            itemBuilder: (context, index) {
-              DocumentSnapshot ds = snapshot.data!.docs[index];
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailsPage(ds: ds)));
-                  },
-                  child: VxBox(
-                          child: Column(
+        return StaggeredGridView.countBuilder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          //physics: const AlwaysScrollableScrollPhysics(),
+          mainAxisSpacing: 9,
+          crossAxisSpacing: 9,
+          crossAxisCount: 6,
+          itemCount: snapshot.data!.docs.length,
+          staggeredTileBuilder: (index) {
+            DocumentSnapshot ds = snapshot.data!.docs[index];
+            return StaggeredTile.count(
+                3, ds['ArticlePhotoUrl'] == 'WithoutImage' ? 1.1 : 2.5);
+          },
+          // staggeredTileBuilder: (index) =>
+          //     StaggeredTile.count(3, index.isEven ? 2 : 1),
+          itemBuilder: (context, index) {
+            DocumentSnapshot ds = snapshot.data!.docs[index];
+            return InkWell(
+              onTap: () {
+                context.vxNav.push(
+                  Uri(
+                      // path: MyRoutes.detailRoute,
+                      // queryParameters: {"type": "", "id": ds.id}
+                      path: MyRoutes.homenewRoute,
+                      queryParameters: {"type": "/Articles", "id": ds.id}),
+                );
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => DetailsPage(ds: ds)));
+              },
+              child: VxBox(
+                      child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ds['ArticlePhotoUrl'] != 'WithoutImage'
+                      ? Container(
+                          width: context.screenWidth,
+                          height: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(ds['ArticlePhotoUrl']))),
+                        )
+                      : Container(),
+                  10.heightBox,
+                  Flexible(
+                    child: Text(
+                      ds['ArticleTitle'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ).px16(),
+                  ),
+                  5.heightBox,
+                  Flexible(
+                    child: Text(
+                      ds['ArticleDescription'],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                          fontSize: 10,
+                          textStyle: context.captionStyle,
+                          fontWeight: FontWeight.normal),
+                    ).px16(),
+                  ),
+                  15.heightBox,
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ds['ArticlePhotoUrl'] != 'WithoutImage'
-                          ? Container(
-                              width: context.screenWidth,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image:
-                                          NetworkImage(ds['ArticlePhotoUrl']))),
-                            )
-                          : Container(),
-                      10.heightBox,
-                      Flexible(
-                        child: Text(
-                          ds['ArticleTitle'],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.poppins(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ).px12(),
-                      ),
-                      5.heightBox,
-                      Flexible(
-                        child: Text(
-                          ds['ArticleDescription'],
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              textStyle: context.captionStyle,
-                              fontWeight: FontWeight.normal),
-                        ).px12(),
-                      ),
-                      15.heightBox,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // Flexible(
-                          //   child: Text(
-                          //     "Author : ${ds['AuthorName']}",
-                          //     overflow: TextOverflow.ellipsis,
-                          //     style: GoogleFonts.poppins(
-                          //         fontSize: 15, fontWeight: FontWeight.w600),
-                          //   ).px12(),
-                          // ),
-                          10.widthBox,
-                          Container(
-                            height: 30,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              color: Colors.grey[200],
-                              boxShadow: const [
-                                BoxShadow(
-                                    offset: Offset(4, 4),
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
-                                    color: Colors.black26),
-                                BoxShadow(
-                                    offset: Offset(-4, -4),
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
-                                    color: Colors.white)
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.heart_fill,
-                                  size: 15,
-                                  color: Colors.red,
-                                ),
-                                5.widthBox,
-                                Text(ds['NoOfLikes'])
-                              ],
-                            ).p4(),
-                          ),
-                          10.widthBox,
-                          Container(
-                            height: 30,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              color: Colors.grey[200],
-                              boxShadow: const [
-                                BoxShadow(
-                                    offset: Offset(4, 4),
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
-                                    color: Colors.black26),
-                                BoxShadow(
-                                    offset: Offset(-4, -4),
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
-                                    color: Colors.white)
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.chat_bubble_text_fill,
-                                  size: 15,
-                                  color: Colors.black,
-                                ),
-                                5.widthBox,
-                                Text(ds['NoOfComment'])
-                              ],
-                            ).p4(),
-                          ),
-                          10.widthBox,
-                          // share
-                          Container(
-                            height: 30,
-                            width: 45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              color: Colors.grey[200],
-                              boxShadow: const [
-                                BoxShadow(
-                                    offset: Offset(4, 4),
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
-                                    color: Colors.black26),
-                                BoxShadow(
-                                    offset: Offset(-4, -4),
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
-                                    color: Colors.white)
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.share,
+                      // Flexible(
+                      //   child: Text(
+                      //     "Author : ${ds['AuthorName']}",
+                      //     overflow: TextOverflow.ellipsis,
+                      //     style: GoogleFonts.poppins(
+                      //         fontSize: 15, fontWeight: FontWeight.w600),
+                      //   ).px12(),
+                      // ),
+                      10.widthBox,
+                      Container(
+                        height: 30,
+                        width: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(4, 4),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.black26),
+                            BoxShadow(
+                                offset: Offset(-4, -4),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.white)
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              CupertinoIcons.heart_fill,
                               size: 15,
                               color: Colors.black,
                             ),
-                          ).p4(),
-                        ],
-                      ).p8(),
-                      // 10.heightBox
+                            5.widthBox,
+                            Text(ds['NoOfLikes'])
+                          ],
+                        ).p4(),
+                      ),
+                      10.widthBox,
+                      Container(
+                        height: 30,
+                        width: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(4, 4),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.black26),
+                            BoxShadow(
+                                offset: Offset(-4, -4),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.white)
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              CupertinoIcons.chat_bubble_text_fill,
+                              size: 15,
+                              color: Colors.black,
+                            ),
+                            5.widthBox,
+                            Text(ds['NoOfComment'])
+                          ],
+                        ).p4(),
+                      ),
+                      10.widthBox,
+                      // share
+                      Container(
+                        height: 30,
+                        width: 45,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(4, 4),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.black26),
+                            BoxShadow(
+                                offset: Offset(-4, -4),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                color: Colors.white)
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.share,
+                          size: 15,
+                          color: Colors.black,
+                        ),
+                      ).p4(),
                     ],
-                  ))
-                      .square(
-                          ds['ArticlePhotoUrl'] == 'WithoutImage' ? 50 : 120)
-                      .neumorphic(
-                          curve: VxCurve.emboss,
-                          elevation: 31,
-                          color: Colors.grey[200])
-                      .make(),
-                ),
-              );
-            },
-          ),
+                  ).p8(),
+                  // 10.heightBox
+                ],
+              ))
+                  .square(ds['ArticlePhotoUrl'] == 'WithoutImage' ? 30 : 90)
+                  .withDecoration(
+                    BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 15,
+                            color: Colors.black26),
+                        BoxShadow(
+                            offset: Offset(-4, -4),
+                            spreadRadius: 1,
+                            blurRadius: 15,
+                            color: Colors.white)
+                      ],
+                    ),
+                  )
+                  // .neumorphic(
+                  //     curve: VxCurve.emboss,
+                  //     elevation: 31,
+                  //     color: Colors.white)
+                  .make(),
+            );
+          },
         );
       },
     );

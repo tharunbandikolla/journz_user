@@ -11,7 +11,7 @@ class RightPane extends StatelessWidget {
     return Container(
       height: context.screenHeight,
       width: context.percentWidth * 10,
-      color: Colors.white,
+      //color: Colors.white,
     );
   }
 }

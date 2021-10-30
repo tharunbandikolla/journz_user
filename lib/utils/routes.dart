@@ -1,4 +1,6 @@
 class MyRoutes {
-  static String homeRoute = "/home";
-  static String homeDetailRoute = "/detail";
+  //static String preString = "";
+  static String homeRoute = "";
+  static String homenewRoute = "/";
+  static String detailRoute = "/Articles";
 }
