@@ -316,8 +316,9 @@ class DetailsPage extends StatelessWidget {
                                                 color: Colors.red,
                                               ),
                                               15.widthBox,
-                                              Text(snapshot.data!.docs[0]
-                                                  ['NoOfLikes'])
+                                              Text(snapshot
+                                                  .data!.docs[0]['NoOfLike']
+                                                  .toString())
                                             ],
                                           ).px16(),
                                         ),
