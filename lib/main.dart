@@ -4,11 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:journz_web/Authentication/AuthenticationBloc/LoginCubit/login_cubit.dart';
 import 'package:journz_web/Authentication/AuthenticationBloc/LoginScreenPasswordBloc/showhidepassword_cubit.dart';
 import 'package:journz_web/Authentication/Screens/InitialAccountSelection.dart';
-import 'package:journz_web/Common/AppTheme/StartupThemePreferences.dart';
+
 import 'package:journz_web/Common/AppTheme/ThemeBloc/theme_bloc.dart';
 import 'package:journz_web/Common/Helper/AuthorRequestCubit/authorrequest_cubit.dart';
 import 'package:journz_web/Common/Helper/BottomNavBar/bottomnavbar_cubit.dart';
@@ -16,9 +16,9 @@ import 'package:journz_web/Common/Helper/BottomScrollCubit/bottomscroll_cubit.da
 import 'package:journz_web/Common/Helper/ConnectivityCubit/connectivity_cubit.dart';
 import 'package:journz_web/Common/Helper/LoadingScreenCubit/loadingscreen_cubit.dart';
 import 'package:journz_web/Common/Helper/SharedPrefCubitForSettingsScreen/sharedpref_cubit.dart';
-import 'package:journz_web/Common/Helper/StartupThemeHelperCubit/startupthemehelper_cubit.dart';
+
 import 'package:journz_web/Common/Helper/ThemeBasedWidgetCubit/themebasedwidget_cubit.dart';
-import 'package:journz_web/Common/Screens/StartupThemeSelection.dart';
+
 import 'package:journz_web/articleDetailsView/ArticlesDetailViewCubit/ArticleLikeCubit/articlelike_cubit.dart';
 import 'package:journz_web/articleDetailsView/ArticlesDetailViewCubit/DetailViewCubit/articlesdetail_cubit.dart';
 import 'package:journz_web/articleDetailsView/detailspage.dart';
@@ -32,7 +32,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'Common/AppTheme/ThemePreferenses.dart';
+import 'PrivacyPolicy/Screen/privacypolicy.dart';
 
 void main() {
   setPathUrlStrategy();
@@ -92,52 +92,51 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => FavouritepreferenceCubit()),
-        BlocProvider(create: (context) => ThemeBloc()),
-        BlocProvider(create: (context) => ArticlesdetailCubit()),
-        BlocProvider(create: (context) => ArticlelikeCubit()),
-        //BlocProvider(create: (context) => DetailviewdynamiclinkCubit()),
-        //BlocProvider(create: (context) => ArticleswapCubit()),
-        BlocProvider(create: (context) => SharedprefCubit(pref1)),
-        BlocProvider(create: (context) => BottomscrollCubit()),
-        BlocProvider(create: (context) => AuthorrequestCubit()),
-        BlocProvider(create: (context) => BottomnavbarCubit()),
-        BlocProvider(create: (context) => ShowhidepasswordCubit()),
-        BlocProvider(create: (context) => LoginCubit()),
-        BlocProvider(create: (context) => DrawernameCubit()),
-        BlocProvider(create: (context) => LoadingscreenCubit()),
-        BlocProvider(create: (context) => ConnectivityCubit()),
-        BlocProvider(create: (context) => ThemebasedwidgetCubit()),
-      ],
-      child: MaterialApp.router(
-        title: 'Journz',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          canvasColor: Colors.grey[100],
-          //fontFamily: GoogleFonts.poppins().fontFamily,
-          //primarySwatch: Colors.blue,
-        ),
-        routeInformationParser: VxInformationParser(),
-        routerDelegate: VxNavigator(routes: {
-          // MyRoutes.initialAccountSelection: (_, __) =>
-          //     const MaterialPage(child: ThemeLoader()),
-          MyRoutes.loading: (_, __) => MaterialPage(child: SplashScreen()),
-          "": (_, __) => const MaterialPage(child: HomePage()),
-          MyRoutes.homeRoute: (_, __) => const MaterialPage(child: HomePage()),
-          MyRoutes.detailnewRoute: (uri, __) {
-            //print(uri.queryParameters['id']);
-            var id = uri.queryParameters['id'];
-            //var type = uri.queryParameters['type'];
-            return MaterialPage(
-                child: DetailsPage(
-              id: id!,
-            ));
-          }
-        }),
-        //home: const HomePage(),
-      ),
-    );
+        providers: [
+          BlocProvider(create: (context) => FavouritepreferenceCubit()),
+          BlocProvider(create: (context) => ThemeBloc()),
+          BlocProvider(create: (context) => ArticlesdetailCubit()),
+          BlocProvider(create: (context) => ArticlelikeCubit()),
+          //BlocProvider(create: (context) => DetailviewdynamiclinkCubit()),
+          //BlocProvider(create: (context) => ArticleswapCubit()),
+          BlocProvider(create: (context) => SharedprefCubit(pref1)),
+          BlocProvider(create: (context) => BottomscrollCubit()),
+          BlocProvider(create: (context) => AuthorrequestCubit()),
+          BlocProvider(create: (context) => BottomnavbarCubit()),
+          BlocProvider(create: (context) => ShowhidepasswordCubit()),
+          BlocProvider(create: (context) => LoginCubit()),
+          BlocProvider(create: (context) => DrawernameCubit()),
+          BlocProvider(create: (context) => LoadingscreenCubit()),
+          BlocProvider(create: (context) => ConnectivityCubit()),
+          BlocProvider(create: (context) => ThemebasedwidgetCubit()),
+        ],
+        child: MaterialApp.router(
+          title: 'Journz',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            canvasColor: Colors.grey[100],
+            //fontFamily: GoogleFonts.poppins().fontFamily,
+            //primarySwatch: Colors.blue,
+          ),
+          routeInformationParser: VxInformationParser(),
+          routerDelegate: VxNavigator(routes: {
+            "": (_, __) => const MaterialPage(child: HomePage()),
+            MyRoutes.homenewRoute: (uri, __) {
+              var id = uri.queryParameters['id'];
+              var type = uri.queryParameters['type'];
+              if (type == "/Articles") {
+                return MaterialPage(
+                    child: DetailsPage(
+                  id: id!,
+                ));
+              } else if (type == "/PrivacyPolicy") {
+                return const MaterialPage(child: PrivacyPolicy());
+              } else {
+                return const MaterialPage(child: HomePage());
+              }
+            },
+          }),
+        ));
   }
 }
 
