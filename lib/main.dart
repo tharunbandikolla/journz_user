@@ -18,6 +18,9 @@ import 'package:journz_web/Common/Helper/LoadingScreenCubit/loadingscreen_cubit.
 import 'package:journz_web/Common/Helper/SharedPrefCubitForSettingsScreen/sharedpref_cubit.dart';
 
 import 'package:journz_web/Common/Helper/ThemeBasedWidgetCubit/themebasedwidget_cubit.dart';
+import 'package:journz_web/ContactUs/Screen/contact_us.dart';
+import 'package:journz_web/Marketing/Screen/MarketingScreen.dart';
+import 'package:journz_web/Marketing/Screen/marketing_screen_youtube.dart';
 
 import 'package:journz_web/articleDetailsView/ArticlesDetailViewCubit/ArticleLikeCubit/articlelike_cubit.dart';
 import 'package:journz_web/articleDetailsView/ArticlesDetailViewCubit/DetailViewCubit/articlesdetail_cubit.dart';
@@ -125,12 +128,13 @@ class _MyAppState extends State<MyApp> {
               var id = uri.queryParameters['id'];
               var type = uri.queryParameters['type'];
               if (type == "/Articles") {
-                return MaterialPage(
-                    child: DetailsPage(
-                  id: id!,
-                ));
+                return MaterialPage(child: DetailsPage(id: id!));
               } else if (type == "/PrivacyPolicy") {
                 return const MaterialPage(child: PrivacyPolicy());
+              } else if (type == "/ContactUs") {
+                return const MaterialPage(child: ContactUs());
+              } else if (type == "/Marketing") {
+                return MaterialPage(child: MarketingScreen());
               } else {
                 return const MaterialPage(child: HomePage());
               }

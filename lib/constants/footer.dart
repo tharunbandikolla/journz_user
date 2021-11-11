@@ -30,11 +30,43 @@ class Footer extends StatelessWidget {
                     // path: MyRoutes.detailRoute,
                     // queryParameters: {"type": "", "id": ds.id}
                     path: MyRoutes.detailnewRoute,
+                    queryParameters: {"type": "/Marketing"}),
+              );
+            },
+            child: "Marketing".text.white.make(),
+          ),
+          SizedBox(width: context.screenWidth * 0.005),
+          "|".text.white.xl2.make(),
+          SizedBox(width: context.screenWidth * 0.005),
+          InkWell(
+            onTap: () {
+              context.vxNav.push(
+                Uri(
+                    // path: MyRoutes.detailRoute,
+                    // queryParameters: {"type": "", "id": ds.id}
+                    path: MyRoutes.detailnewRoute,
+                    queryParameters: {"type": "/ContactUs"}),
+              );
+            },
+            child: "Contact Us".text.white.make(),
+          ),
+          SizedBox(width: context.screenWidth * 0.005),
+          "|".text.white.xl2.make(),
+          SizedBox(width: context.screenWidth * 0.005),
+          InkWell(
+            onTap: () {
+              context.vxNav.push(
+                Uri(
+                    // path: MyRoutes.detailRoute,
+                    // queryParameters: {"type": "", "id": ds.id}
+                    path: MyRoutes.detailnewRoute,
                     queryParameters: {"type": "/PrivacyPolicy"}),
               );
             },
             child: "Privacy Policy".text.white.make(),
           ),
+          SizedBox(width: context.screenWidth * 0.005),
+          "|".text.xl2.white.make(),
           SizedBox(width: context.screenWidth * 0.005),
           "Copyright @ 2020 Journz".text.white.make()
         ],

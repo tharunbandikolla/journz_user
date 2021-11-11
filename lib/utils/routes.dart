@@ -6,5 +6,7 @@ class MyRoutes {
   static String homenewRoute = "/";
   static String detailnewRoute = "/";
   static String privacyPolicy = "/PrivacyPolicy";
+  static String marketing = "/Marketing";
+  static String contactUs = "/ContactUs";
   //static String detailRoute = "/Articles";
 }
