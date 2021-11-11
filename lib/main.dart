@@ -35,6 +35,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'Common/AppTheme/ThemePreferenses.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
   Vx.isWeb;
   runApp(App());
@@ -65,6 +66,23 @@ class App extends StatelessWidget {
         return const CircularProgressIndicator();
       },
     );
+  }
+}
+
+class MyObs extends VxObserver {
+  @override
+  void didChangeRoute(Uri route, Page page, String pushOrPop) {
+    print("${route.path} - $pushOrPop");
+  }
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    print('Pushed a route');
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    print('Popped a route');
   }
 }
 
@@ -119,11 +137,13 @@ class _MyAppState extends State<MyApp> {
           //primarySwatch: Colors.blue,
         ),
         routeInformationParser: VxInformationParser(),
-        routerDelegate: VxNavigator(routes: {
+        routerDelegate: VxNavigator(observers: [
+          MyObs()
+        ], routes: {
           // MyRoutes.initialAccountSelection: (_, __) =>
           //     const MaterialPage(child: ThemeLoader()),
           MyRoutes.loading: (_, __) => MaterialPage(child: SplashScreen()),
-          "": (_, __) => const MaterialPage(child: HomePage()),
+          "/home": (_, __) => const MaterialPage(child: HomePage()),
           MyRoutes.homeRoute: (_, __) => const MaterialPage(child: HomePage()),
           MyRoutes.detailnewRoute: (uri, __) {
             //print(uri.queryParameters['id']);

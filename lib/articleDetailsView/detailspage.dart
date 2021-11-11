@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:universal_html/js.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -169,7 +170,8 @@ class DetailsPage extends StatelessWidget {
                             children: [
                               InkWell(
                                   onTap: () {
-                                    Navigator.of(context).pop();
+                                    context.vxNav.pop();
+                                    //Navigator.of(context).pop();
                                   },
                                   child: const Icon(Icons.arrow_back)),
                               10.heightBox,
