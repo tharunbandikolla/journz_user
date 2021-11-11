@@ -1,6 +1,8 @@
 @JS()
 library javascript_bundler;
+
 import 'package:flutter/material.dart';
+import 'package:journz_web/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:js/js.dart';
 
@@ -20,7 +22,54 @@ class Footer extends StatelessWidget {
       color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: ["Copyright @ 2020 Journz".text.white.make()],
+        children: [
+          InkWell(
+            onTap: () {
+              context.vxNav.push(
+                Uri(
+                    // path: MyRoutes.detailRoute,
+                    // queryParameters: {"type": "", "id": ds.id}
+                    path: MyRoutes.detailnewRoute,
+                    queryParameters: {"type": "/Marketing"}),
+              );
+            },
+            child: "Marketing".text.white.make(),
+          ),
+          SizedBox(width: context.screenWidth * 0.005),
+          "|".text.white.xl2.make(),
+          SizedBox(width: context.screenWidth * 0.005),
+          InkWell(
+            onTap: () {
+              context.vxNav.push(
+                Uri(
+                    // path: MyRoutes.detailRoute,
+                    // queryParameters: {"type": "", "id": ds.id}
+                    path: MyRoutes.detailnewRoute,
+                    queryParameters: {"type": "/ContactUs"}),
+              );
+            },
+            child: "Contact Us".text.white.make(),
+          ),
+          SizedBox(width: context.screenWidth * 0.005),
+          "|".text.white.xl2.make(),
+          SizedBox(width: context.screenWidth * 0.005),
+          InkWell(
+            onTap: () {
+              context.vxNav.push(
+                Uri(
+                    // path: MyRoutes.detailRoute,
+                    // queryParameters: {"type": "", "id": ds.id}
+                    path: MyRoutes.detailnewRoute,
+                    queryParameters: {"type": "/PrivacyPolicy"}),
+              );
+            },
+            child: "Privacy Policy".text.white.make(),
+          ),
+          SizedBox(width: context.screenWidth * 0.005),
+          "|".text.xl2.white.make(),
+          SizedBox(width: context.screenWidth * 0.005),
+          "Copyright @ 2020 Journz".text.white.make()
+        ],
       ),
     );
   }
