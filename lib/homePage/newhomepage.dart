@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -151,6 +152,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   StreamBuilder<QuerySnapshot<Object?>> subType() {
+    int all = 0;
+
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('ArticleSubtype')
@@ -173,61 +176,118 @@ class _HomePageState extends State<HomePage> {
             },
             itemBuilder: (context, index) {
               DocumentSnapshot ds = snapshot.data!.docs[index];
-              return InkWell(
-                onTap: () {
-                  // category = ds['SubType'];
-                  // print(category);
-                  setState(() {
-                    _item = ds;
-                    currentPage = index;
-                  });
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        //borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black, width: 2),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    ds['PhotoPath'],
-                                  )),
+              return index == all
+                  ? InkWell(
+                      onTap: () {
+                        // category = ds['SubType'];
+                        // print(category);
+                        setState(() {
+                          _item = all;
+                          //print(_item);
+                          //currentPage = index;
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              // border:
-                              // Border.all(
-                              //     color: Colors.transparent, width: 3),
                               //borderRadius: BorderRadius.circular(10),
-                              color: Colors.black),
-                        ),
+                              border: Border.all(color: Colors.black, width: 2),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: CachedNetworkImageProvider(
+                                          'https://picsum.photos/200'),
+                                    ),
+                                    shape: BoxShape.circle,
+                                    // border:
+                                    // Border.all(
+                                    //     color: Colors.transparent, width: 3),
+                                    //borderRadius: BorderRadius.circular(10),
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          5.heightBox,
+                          Flexible(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 60,
+                              child: Text(
+                                "All",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    5.heightBox,
-                    Flexible(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 60,
-                        child: Text(
-                          ds['SubType'],
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.black),
-                        ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        // category = ds['SubType'];
+                        // print(category);
+                        setState(() {
+                          _item = ds;
+                          currentPage = index;
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              //borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black, width: 2),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                          ds['PhotoPath'],
+                                        )),
+                                    shape: BoxShape.circle,
+                                    // border:
+                                    // Border.all(
+                                    //     color: Colors.transparent, width: 3),
+                                    //borderRadius: BorderRadius.circular(10),
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          5.heightBox,
+                          Flexible(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 60,
+                              child: Text(
+                                ds['SubType'],
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              );
+                    );
             },
           ),
         ).p32();
@@ -249,7 +309,7 @@ class Articles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _item == null || _item['SubType'] == 'All'
+      stream: _item == 0 || _item == null
           ? FirebaseFirestore.instance
               .collection('ArticlesCollection')
               .where('IsArticlePublished', isEqualTo: 'Published')

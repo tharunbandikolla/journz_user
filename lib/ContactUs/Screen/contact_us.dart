@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:journz_web/PrivacyPolicy/Screen/privacypolicycontent.dart';
 import 'package:journz_web/homePage/newhomepage.dart';
 import 'package:velocity_x/velocity_x.dart';
 

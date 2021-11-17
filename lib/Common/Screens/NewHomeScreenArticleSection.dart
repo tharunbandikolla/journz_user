@@ -499,22 +499,22 @@
 //   List<dynamic> locFavList = [];
 //   var tokenId;
 //   var pref;
-//   getSharedPref() async {
-//     pref = await SharedPreferences.getInstance();
-//     if (FirebaseAuth.instance.currentUser != null) {
-//       if (!FirebaseAuth.instance.currentUser!.isAnonymous) {
-//         FirebaseFirestore.instance
-//             .collection('UserProfile')
-//             .doc(FirebaseAuth.instance.currentUser!.uid)
-//             .get()
-//             .then((value) async {
-//           checkMobileNumberLinked =
-//               await value.data()!['IsMobileNumberVerified'];
+  // getSharedPref() async {
+  //   pref = await SharedPreferences.getInstance();
+  //   if (FirebaseAuth.instance.currentUser != null) {
+  //     if (!FirebaseAuth.instance.currentUser!.isAnonymous) {
+  //       FirebaseFirestore.instance
+  //           .collection('UserProfile')
+  //           .doc(FirebaseAuth.instance.currentUser!.uid)
+  //           .get()
+  //           .then((value) async {
+  //         checkMobileNumberLinked =
+  //             await value.data()!['IsMobileNumberVerified'];
 
-//           print('nnnn daata $checkMobileNumberLinked');
-//         });
-//       }
-//     }
+  //         print('nnnn daata $checkMobileNumberLinked');
+  //       });
+  //     }
+  //   }
 //     FirebaseMessaging messaging = FirebaseMessaging.instance;
 //     tokenId = await messaging.getToken();
 //     if (FirebaseAuth.instance.currentUser != null) {

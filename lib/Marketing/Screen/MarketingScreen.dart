@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:journz_web/homePage/newhomepage.dart';
+import 'package:journz_web/utils/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -27,8 +28,9 @@ class _MarketingScreenState extends State<MarketingScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+        context.vxNav.replace(Uri.parse(MyRoutes.homeRoute));
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => const HomePage()));
         return Future.value(true);
       },
       child: Scaffold(

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:journz_web/Authentication/AuthenticationBloc/LoginCubit/login_cubit.dart';
 import 'package:journz_web/Authentication/AuthenticationBloc/LoginScreenPasswordBloc/showhidepassword_cubit.dart';
+import 'package:journz_web/Authentication/DataServices/LoginDatabase.dart';
 import 'package:journz_web/Authentication/Screens/ForgotPasswordScreen.dart';
 import 'package:journz_web/Common/Helper/LoadingScreenCubit/loadingscreen_cubit.dart';
 import 'package:journz_web/Common/Widgets/NewCircularElevattedButton.dart';
@@ -39,14 +40,179 @@ class _LeftPaneState extends State<LeftPane> {
   late String photourl;
   late List<dynamic> fav;
 
-  loginFunc() {
-    if (_loginFormKey.currentState!.validate()) {
-      _loginFormKey.currentState!.save();
-      context.read<LoadingscreenCubit>().changeLoadingState(false);
-      context.read<LoginCubit>().checkUserLogin(
-          context, userNameController.text, passwordController.text);
+  PrefService _prefService = PrefService();
+
+  checkUserLogin(BuildContext context, String val, String password) {
+    String? email;
+
+    print('nnn val $val   password $password');
+    if (RegExp(r'[0-9]{10}$').hasMatch(val)) {
+      LoginDatabase()
+          .checkExistingMobileNumber(context, password, val)
+          .then((value) {
+        if (value.size != 0) {
+          value.docs.forEach((element) async {
+            print('nnn mobile num ${element.data()['Email']}');
+            email = await element.data()['Email'].toString();
+          });
+
+          Future.delayed(Duration(milliseconds: 700), () async {
+            try {
+              await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(email: email!, password: password)
+                  .whenComplete(() async {
+                FirebaseAuth.instance.currentUser?.reload();
+                if (FirebaseAuth.instance.currentUser != null) {
+                  print(' nnn passing through this way');
+                  _prefService.createCache(val).whenComplete(() {
+                    if (val.isNotEmpty && password.isNotEmpty) {
+                      context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+                      setState(() {});
+                    }
+                  });
+
+                  //context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => MultiBlocProvider(providers: [
+                  //             BlocProvider(
+                  //                 create: (context) => ShowhidepasswordCubit()),
+                  //           ], child: HomePage())),
+                  //   //(route) => false
+                  // );
+                }
+              });
+            } catch (e) {
+              //String msg = e
+              //  .toString()
+              //  .replaceFirst(RegExp(r'\[(.*?)\]', caseSensitive: false), '');
+              //  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              //   content: Text(msg.trim()),
+              //  ));
+              context.read<LoadingscreenCubit>().changeLoadingState(true);
+              throw Exception(e);
+            }
+          });
+        } else {
+          context.read<LoadingscreenCubit>().changeLoadingState(true);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Mobile Number Not Matching With Records')));
+        }
+      });
+    } else if (RegExp(r'^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$',
+            caseSensitive: false)
+        .hasMatch(val)) {
+      LoginDatabase().checkExistingEmail(context, password, val).then((value) {
+        if (value.size != 0) {
+          value.docs.forEach((element) async {
+            print('nnn mobile num ${element.data()['Email']}');
+            email = element.data()['Email'].toString();
+          });
+
+          Future.delayed(Duration(milliseconds: 700), () async {
+            try {
+              await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(email: email!, password: password)
+                  .whenComplete(() async {
+                FirebaseAuth.instance.currentUser?.reload();
+                if (FirebaseAuth.instance.currentUser != null) {
+                  _prefService.createCache(val).whenComplete(() {
+                    if (val.isNotEmpty && password.isNotEmpty) {
+                      context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+                      setState(() {});
+                    }
+                  });
+                  //context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => MultiBlocProvider(providers: [
+                  //             BlocProvider(
+                  //                 create: (context) => ShowhidepasswordCubit()),
+                  //           ], child: HomePage())),
+                  //   //(route) => false
+                  // );
+                }
+              });
+            } catch (e) {
+              String msg = e
+                  .toString()
+                  .replaceFirst(RegExp(r'\[(.*?)\]', caseSensitive: false), '');
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(msg.trim()),
+              ));
+              context.read<LoadingscreenCubit>().changeLoadingState(true);
+              throw Exception(e);
+            }
+          });
+        } else {
+          context.read<LoadingscreenCubit>().changeLoadingState(true);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Email Not Matching With Records')));
+        }
+      });
+    } else if (val.isNotEmpty) {
+      LoginDatabase()
+          .checkExistingUserName(context, password, val)
+          .then((value) {
+        if (value.size != 0) {
+          value.docs.forEach((element) async {
+            print('nnn mobile num ${element.data()['Email']}');
+            email = element.data()['Email'].toString();
+          });
+
+          Future.delayed(Duration(milliseconds: 700), () async {
+            try {
+              await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(email: email!, password: password)
+                  .whenComplete(() async {
+                FirebaseAuth.instance.currentUser?.reload();
+                if (FirebaseAuth.instance.currentUser != null) {
+                  _prefService.createCache(val).whenComplete(() {
+                    if (val.isNotEmpty && password.isNotEmpty) {
+                      context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+                      setState(() {});
+                    }
+                  });
+                  //context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => MultiBlocProvider(providers: [
+                  //             BlocProvider(
+                  //                 create: (context) => ShowhidepasswordCubit()),
+                  //           ], child: HomePage())),
+                  //   //(route) => false
+                  // );
+                }
+              });
+            } catch (e) {
+              String msg = e
+                  .toString()
+                  .replaceFirst(RegExp(r'\[(.*?)\]', caseSensitive: false), '');
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(msg),
+              ));
+            }
+          });
+        } else {
+          context.read<LoadingscreenCubit>().changeLoadingState(true);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('UserName Not Matching With Records')));
+        }
+      });
     }
   }
+
+  // loginFunc() {
+  //   if (_loginFormKey.currentState!.validate()) {
+  //     _loginFormKey.currentState!.save();
+  //     context.read<LoadingscreenCubit>().changeLoadingState(false);
+  //     context.read<LoginCubit>().checkUserLogin(
+  //         context, userNameController.text, passwordController.text);
+  //   }
+  // }
 
   _fetch() async {
     final firebaseUser = FirebaseAuth.instance.currentUser;
@@ -145,7 +311,9 @@ class _LeftPaneState extends State<LeftPane> {
                     controller: passwordController,
                     obscureText: passwordState.showHidePassWord,
                     onFieldSubmitted: (String v) {
-                      loginFunc();
+                      //loginFunc();
+                      checkUserLogin(context, userNameController.text,
+                          passwordController.text);
                     },
                     validator: (val) {
                       if (!RegExp(
@@ -197,7 +365,10 @@ class _LeftPaneState extends State<LeftPane> {
               20.heightBox,
               NewCircularElevattedButton(
                 name: "Login",
-                func: loginFunc,
+                func: () {
+                  checkUserLogin(context, userNameController.text,
+                      passwordController.text);
+                },
                 padHorizontal: 40,
                 padVertical: 20,
                 fontSize: 15,
@@ -269,10 +440,11 @@ class LoggedIn extends StatelessWidget {
         //ViewProfile container
         InkWell(
           onTap: () async {
-            await FirebaseAuth.instance.signOut();
-            await _prefService.removeCache("password").whenComplete(() {
-              context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
-            });
+            await FirebaseAuth.instance.signOut().whenComplete(
+                () => context.vxNav.push(Uri.parse(MyRoutes.homeRoute)));
+            // await _prefService.removeCache("password").whenComplete(() {
+            //   context.vxNav.push(Uri.parse(MyRoutes.homeRoute));
+            // });
           },
           // launch(
           //     "https://play.google.com/store/apps/details?id=in.journz.journz");

@@ -21,6 +21,7 @@ import 'package:journz_web/Common/Helper/ThemeBasedWidgetCubit/themebasedwidget_
 import 'package:journz_web/ContactUs/Screen/contact_us.dart';
 import 'package:journz_web/Marketing/Screen/MarketingScreen.dart';
 import 'package:journz_web/Marketing/Screen/marketing_screen_youtube.dart';
+import 'package:journz_web/NewDesign/homepage.dart';
 
 import 'package:journz_web/articleDetailsView/ArticlesDetailViewCubit/ArticleLikeCubit/articlelike_cubit.dart';
 import 'package:journz_web/articleDetailsView/ArticlesDetailViewCubit/DetailViewCubit/articlesdetail_cubit.dart';
@@ -183,16 +184,15 @@ class _MyAppState extends State<MyApp> {
           title: 'Journz',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            canvasColor: Colors.grey[100],
+            canvasColor: Color(0xFFF7F8F9),
             //fontFamily: GoogleFonts.poppins().fontFamily,
             //primarySwatch: Colors.blue,
           ),
           routeInformationParser: VxInformationParser(),
           routerDelegate: VxNavigator(routes: {
-            MyRoutes.loading: (_, __) => MaterialPage(child: SplashScreen()),
-            "/home": (_, __) => const MaterialPage(child: HomePage()),
-            MyRoutes.homeRoute: (_, __) =>
-                const MaterialPage(child: HomePage()),
+            //MyRoutes.loading: (_, __) => MaterialPage(child: SplashScreen()),
+            "/": (_, __) => const MaterialPage(child: Home()),
+            MyRoutes.homeRoute: (_, __) => const MaterialPage(child: Home()),
             MyRoutes.detailnewRoute: (uri, __) {
               var id = uri.queryParameters['id'];
               var type = uri.queryParameters['type'];
@@ -205,7 +205,7 @@ class _MyAppState extends State<MyApp> {
               } else if (type == "/Marketing") {
                 return MaterialPage(child: MarketingScreen());
               } else {
-                return const MaterialPage(child: HomePage());
+                return const MaterialPage(child: Home());
               }
             },
           }),
