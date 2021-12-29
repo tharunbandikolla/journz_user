@@ -118,9 +118,16 @@
   <!-- TODO: Add SDKs for Firebase products that you want to use
       https://firebase.google.com/docs/web/setup#available-libraries -->
 
-  <script type="module">
-    import { firebaseConfig } from './firebase-config.js'
-
+  <script>
+    //import { firebaseConfiguration } from '../firebase-config.js'
+    var firebaseConfig = {
+  apiKey: "AIzaSyDGMeIC3w91gTQgAYYo_W0fmrweyFEqhO0",
+  authDomain: "journzsocialnetwork.firebaseapp.com",
+  projectId: "journzsocialnetwork",
+  storageBucket: "journzsocialnetwork.appspot.com",
+  messagingSenderId: "363234200077",
+  appId: "1:363234200077:web:4ae5d2efeaf32911e4e344"
+}; 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
         //firebase.analytics();

@@ -1,4 +1,4 @@
-export var firebaseConfig = {
+export var firebaseConfiguration = {
   apiKey: "AIzaSyDGMeIC3w91gTQgAYYo_W0fmrweyFEqhO0",
   authDomain: "journzsocialnetwork.firebaseapp.com",
   projectId: "journzsocialnetwork",
