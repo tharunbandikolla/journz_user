@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
+
 import 'package:journz_web/HiveArticlesModel/ArticleModel/hive_article_data.dart';
 
 import 'package:journz_web/HiveArticlesModel/hive_articles_title_pref.dart';

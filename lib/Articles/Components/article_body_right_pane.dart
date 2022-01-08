@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -9,9 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:journz_web/Articles/Comments/code_articles_comment_model.dart';
 import 'package:journz_web/Articles/Comments/hive_articles_comments.dart';
 import 'package:journz_web/Articles/Cubit/ShowArticleData/show_article_data_cubit.dart';
+import 'package:journz_web/Articles/Cubit/ShowCommentCubit/show_comment_cubit.dart';
 import 'package:journz_web/Common/Cubits/CheckInternetConnection/check_internet_connection_cubit.dart';
 import 'package:journz_web/Common/Helper/time_stamp_reader.dart';
-
 import 'package:journz_web/HiveArticlesModel/ArticleModel/hive_article_data.dart';
 import 'package:journz_web/NewHomePage/Cubits/CheckUserLoginedCubit/checkuserlogined_cubit.dart';
 import 'package:journz_web/NewHomePage/LocalDatabase/HiveBoxes/hive_boxes.dart';
@@ -31,13 +28,15 @@ class ArticleBodyRightPane extends StatefulWidget {
 
 class _ArticleBodyRightPaneState extends State<ArticleBodyRightPane> {
   TextEditingController commentController = TextEditingController();
-  List<HiveArticlesComments> listOfComments = [];
+  DateTime? currentPressedTime;
   @override
   Widget build(BuildContext context) {
     final showArticleData = BlocProvider.of<ShowArticleDataCubit>(context);
     final checkInternet =
         BlocProvider.of<CheckInternetConnectionCubit>(context);
+
     checkInternet.listenForInternet();
+    final showCommentCubit = BlocProvider.of<ShowCommentCubit>(context);
     return Container(
         padding: EdgeInsets.only(left: context.screenWidth * 0.015),
         color: Colors.grey.shade50,
@@ -135,11 +134,15 @@ class _ArticleBodyRightPaneState extends State<ArticleBodyRightPane> {
                                           builder: (context, loginState) {
                                             return InkWell(
                                               onTap: () async {
-                                                ConnectivityResult result =
-                                                    await Connectivity()
-                                                        .checkConnectivity();
-                                                if (result !=
-                                                    ConnectivityResult.none) {
+                                                DateTime now = DateTime.now();
+                                                if (currentPressedTime ==
+                                                        null ||
+                                                    now.difference(
+                                                            currentPressedTime ??
+                                                                now) >
+                                                        const Duration(
+                                                            seconds: 2)) {
+                                                  currentPressedTime = now;
                                                   if (loginState.isLoggined!) {
                                                     if (articleState
                                                         .hiveArticleData!
@@ -158,6 +161,18 @@ class _ArticleBodyRightPaneState extends State<ArticleBodyRightPane> {
                                                                 .arrayRemove([
                                                           loginState.userUid
                                                         ])
+                                                      }).onError((error,
+                                                              stackTrace) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          content: Text(error
+                                                              .toString()
+                                                              .split(']')[1]),
+                                                        ));
+                                                        // ignore: null_argument_to_non_null_type
+                                                        return Future.value();
                                                       });
                                                     } else {
                                                       FirebaseFirestore.instance
@@ -172,15 +187,28 @@ class _ArticleBodyRightPaneState extends State<ArticleBodyRightPane> {
                                                                 .arrayUnion([
                                                           loginState.userUid
                                                         ])
+                                                      }).onError((error,
+                                                              stackTrace) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          content: Text(error
+                                                              .toString()
+                                                              .split(']')[1]),
+                                                        ));
+                                                        // ignore: null_argument_to_non_null_type
+                                                        return Future.value();
                                                       });
                                                     }
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Please Login into Your Account'),
+                                                    ));
                                                   }
-                                                } else {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        'Check Your Internet Connection'),
-                                                  ));
                                                 }
                                               },
                                               child: Container(
@@ -257,6 +285,7 @@ class _ArticleBodyRightPaneState extends State<ArticleBodyRightPane> {
                               builder: (context, loginState) {
                                 return TextField(
                                   controller: commentController,
+                                  maxLength: 200,
                                   decoration: InputDecoration(
                                       suffixIcon: IconButton(
                                           onPressed: () {
@@ -357,82 +386,99 @@ class _ArticleBodyRightPaneState extends State<ArticleBodyRightPane> {
                                   Boxes.getArticleCommentsFromCloud()
                                       .listenable(),
                               builder: (context, value, child) {
-                                listOfComments = List.from(value.values
-                                    .sortedByNum((element) =>
-                                        DateTime.parse(element.commentTime)
-                                            .millisecondsSinceEpoch)
-                                    .reversed
-                                    .toList()
-                                    .cast<HiveArticlesComments>());
-                                return listOfComments.isNotEmpty
-                                    ? ListView.builder(
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: listOfComments.length,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                              constraints: BoxConstraints(
-                                                  minWidth: context.screenWidth,
-                                                  maxWidth: context.screenWidth,
-                                                  minHeight: context.screenHeight *
-                                                      0.15,
-                                                  maxHeight: double.infinity),
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: context.screenWidth *
-                                                      0.01,
-                                                  vertical: context.screenHeight *
-                                                      0.01),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: context.screenWidth *
-                                                      0.01,
-                                                  vertical: context.screenHeight *
-                                                      0.01),
-                                              /*  width: context.screenWidth,
-                                              height:
-                                                  context.screenHeight * 0.15, */
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade200,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          context.screenSize
-                                                                  .aspectRatio *
-                                                              5)),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(listOfComments[index]
-                                                          .commentName)
-                                                      .text
-                                                      .xl
-                                                      .semiBold
-                                                      .make(),
-                                                  Text(readTimestamp(DateTime.parse(
-                                                              listOfComments[
-                                                                      index]
-                                                                  .commentTime)
-                                                          .millisecondsSinceEpoch))
-                                                      .text
-                                                      .light
-                                                      .make(),
-                                                  SizedBox(
-                                                      width:
+                                if (value.values.isNotEmpty) {
+                                  showCommentCubit.listenForComment(value.values
+                                      .sortedByNum((element) =>
+                                          DateTime.parse(element.commentTime)
+                                              .millisecondsSinceEpoch)
+                                      .reversed
+                                      .toList()
+                                      .cast<HiveArticlesComments>());
+                                }
+                                return BlocBuilder<ShowCommentCubit,
+                                    ShowCommentState>(
+                                  builder: (context, commentState) {
+                                    return commentState.listOfComment != null
+                                        ? ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: commentState
+                                                .listOfComment!.length,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                  constraints: BoxConstraints(
+                                                      minWidth:
                                                           context.screenWidth,
-                                                      height:
+                                                      maxWidth:
+                                                          context.screenWidth,
+                                                      minHeight:
                                                           context.screenHeight *
+                                                              0.15,
+                                                      maxHeight:
+                                                          double.infinity),
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          context.screenWidth *
+                                                              0.01,
+                                                      vertical:
+                                                          context.screenHeight *
+                                                              0.01),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          context.screenWidth *
+                                                              0.01,
+                                                      vertical:
+                                                          context.screenHeight *
+                                                              0.01),
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade200,
+                                                      borderRadius:
+                                                          BorderRadius.circular(context.screenSize.aspectRatio * 5)),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(commentState
+                                                              .listOfComment![
+                                                                  index]
+                                                              .commentName)
+                                                          .text
+                                                          .xl
+                                                          .semiBold
+                                                          .make(),
+                                                      Text(readTimestamp(DateTime
+                                                                  .parse(commentState
+                                                                      .listOfComment![
+                                                                          index]
+                                                                      .commentTime)
+                                                              .millisecondsSinceEpoch))
+                                                          .text
+                                                          .light
+                                                          .make(),
+                                                      SizedBox(
+                                                          width: context
+                                                              .screenWidth,
+                                                          height: context
+                                                                  .screenHeight *
                                                               0.005),
-                                                  Text(listOfComments[index]
-                                                          .comment)
-                                                      .text
-                                                      .lg
-                                                      .make(),
-                                                ],
-                                              ));
-                                        },
-                                      )
-                                    : Text('Be The First One To Comment');
+                                                      Text(commentState
+                                                              .listOfComment![
+                                                                  index]
+                                                              .comment)
+                                                          .text
+                                                          .lg
+                                                          .make(),
+                                                    ],
+                                                  ));
+                                            },
+                                          )
+                                        : Text('Be The First One To Comment');
+                                  },
+                                );
                               },
                             )
                           ])

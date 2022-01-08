@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:journz_web/Articles/Comments/hive_articles_comments.dart';
 import 'package:journz_web/Articles/Cubit/ShowArticleData/show_article_data_cubit.dart';
+import 'package:journz_web/Articles/Cubit/ShowCommentCubit/show_comment_cubit.dart';
 import 'package:journz_web/Articles/Page/detailed_article_screen.dart';
 import 'package:journz_web/Common/Cubits/CheckInternetConnection/check_internet_connection_cubit.dart';
 
@@ -207,6 +208,7 @@ class _PassToArticleScreenState extends State<PassToArticleScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => ShowCommentCubit()),
         BlocProvider(create: (context) => CheckInternetConnectionCubit()),
         BlocProvider(create: (context) => ShowArticleDataCubit()),
         BlocProvider(create: (context) => CheckuserloginedCubit()),

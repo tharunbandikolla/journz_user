@@ -38,6 +38,7 @@ class _BodyCenterPaneArticleSectionState
           return ValueListenableBuilder<Box<HiveArticleData>>(
               valueListenable: Boxes.getArticleFromCloud().listenable(),
               builder: (context, value, _) {
+                listOfArticles = [];
                 if (currentSubtypename.selectedSubtype == "All") {
                   listOfArticles =
                       value.values.toList().cast<HiveArticleData>();
@@ -50,20 +51,21 @@ class _BodyCenterPaneArticleSectionState
                   });
                 }
 
-                return GridView.builder(
+                return ListView.builder(
                   physics: BouncingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   itemCount: listOfArticles.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 2.25,
-                      mainAxisSpacing: context.screenHeight * 0.015,
-                      crossAxisSpacing: context.screenHeight * 0.015,
-                      crossAxisCount: 2),
+                  /* gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 4.5,
+                      // mainAxisSpacing: context.screenHeight * 0.015,
+                      // crossAxisSpacing: context.screenHeight * 0.015,
+                      crossAxisCount: 1), */
                   itemBuilder: (context, index) {
                     return currentSubtypename.selectedSubtype! == 'All'
                         ? InkWell(
                             onTap: () async {
+                              // ignore: unused_local_variable
                               CodeArticleData data = CodeArticleData(
                                   articleDescription:
                                       listOfArticles[index].articleDescription,
@@ -105,13 +107,23 @@ class _BodyCenterPaneArticleSectionState
                                       }),
                                   params: listOfArticles[index]);
                             },
-                            child: HomePageCenterPaneArticleCard(
-                                index: index, listOfArticles: listOfArticles),
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  left: index.isOdd
+                                      ? context.screenWidth * 0.1
+                                      : 0,
+                                  right: index.isEven
+                                      ? context.screenWidth * 0.1
+                                      : 0),
+                              child: HomePageCenterPaneArticleCard(
+                                  index: index, listOfArticles: listOfArticles),
+                            ),
                           )
                         : currentSubtypename.selectedSubtype ==
                                 listOfArticles[index].articleSubtype
                             ? InkWell(
                                 onTap: () async {
+                                  // ignore: unused_local_variable
                                   CodeArticleData data = CodeArticleData(
                                       articleDescription: listOfArticles[index]
                                           .articleDescription,
@@ -159,9 +171,18 @@ class _BodyCenterPaneArticleSectionState
                                           }),
                                       params: listOfArticles[index]);
                                 },
-                                child: HomePageCenterPaneArticleCard(
-                                    index: index,
-                                    listOfArticles: listOfArticles),
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: index.isOdd
+                                          ? context.screenWidth * 0.1
+                                          : 0,
+                                      right: index.isEven
+                                          ? context.screenWidth * 0.1
+                                          : 0),
+                                  child: HomePageCenterPaneArticleCard(
+                                      index: index,
+                                      listOfArticles: listOfArticles),
+                                ),
                               )
                             : Container();
                   },

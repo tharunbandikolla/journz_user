@@ -16,7 +16,7 @@ class _BodyRightPaneState extends State<BodyRightPane> {
       padding: EdgeInsets.symmetric(vertical: context.screenHeight * 0.02),
       width: context.screenWidth * 0.15,
       height: context.screenHeight * 0.865,
-      color: Colors.grey.shade50,
+      //color: Colors.grey.shade50,
     );
   }
 }

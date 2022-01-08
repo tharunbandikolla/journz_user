@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:journz_web/HiveArticlesModel/GetArticlesFromCloud/get_articles_from_cloud_cubit.dart';
 import 'package:journz_web/NewHomePage/Cubits/CheckUserLoginedCubit/checkuserlogined_cubit.dart';
 import 'package:journz_web/NewHomePage/Cubits/ShowCurrentlySelectedSubtypeCubit/show_currently_selected_subtype_cubit.dart';
@@ -9,7 +8,6 @@ import 'package:journz_web/NewHomePage/Cubits/get_articles_subtype_cubit/get_art
 import '/NewHomePage/Components/home_page_body_right_pane.dart';
 import '/NewHomePage/Components/home_page_footer.dart';
 import '/NewHomePage/Components/home_page_header.dart';
-
 import 'package:velocity_x/velocity_x.dart';
 import '/NewHomePage/Components/home_page_body_left_pane.dart';
 import '/NewHomePage/Components/home_page_body_center_pane.dart';

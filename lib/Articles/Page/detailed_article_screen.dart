@@ -77,7 +77,6 @@ class _DetailedArticleScreenState extends State<DetailedArticleScreen> {
 
           final box = Boxes.getArticleFromCloud();
 
-          print('nnn key $k');
           box.putAt(k, newArticleData);
         }
       });
@@ -97,7 +96,6 @@ class _DetailedArticleScreenState extends State<DetailedArticleScreen> {
           .snapshots()
           .listen((event) {
         event.docs.forEach((element) async {
-          print('nnnd db ${element.id}');
           CodeArticlesCommentModel model =
               CodeArticlesCommentModel.fromJson(element);
 
@@ -115,12 +113,10 @@ class _DetailedArticleScreenState extends State<DetailedArticleScreen> {
   }
 
   increaseArticleViews() {
-    Future.delayed(Duration(seconds: 5), () {
-      FirebaseFirestore.instance
-          .collection('NewArticleCollection')
-          .doc(widget.docId)
-          .update({'NoOfViews': FieldValue.increment(1)});
-    });
+    FirebaseFirestore.instance
+        .collection('NewArticleCollection')
+        .doc(widget.docId)
+        .update({'NoOfViews': FieldValue.increment(1)});
   }
 
   @override
@@ -129,7 +125,6 @@ class _DetailedArticleScreenState extends State<DetailedArticleScreen> {
     checkUserCubit.checkLogin();
     return WillPopScope(
       onWillPop: () async {
-        print('nnn backButton Working');
         return Future.value(true);
       },
       child: Scaffold(

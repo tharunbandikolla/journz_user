@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:journz_web/NewHomePage/Components/home_body_center_pane_article_section.dart';
 import 'package:journz_web/NewHomePage/Components/home_page_body_center_pane_subtype_header.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import '/NewHomePage/Cubits/ShowCurrentlySelectedSubtypeCubit/show_currently_selected_subtype_cubit.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -28,7 +27,7 @@ class _BodyCenterPaneState extends State<BodyCenterPane> {
       duration: Duration(milliseconds: 300),
       width: context.screenWidth * 0.6,
       height: context.screenHeight * 0.865,
-      color: Colors.grey.shade50,
+      //color: Colors.grey.shade50,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
